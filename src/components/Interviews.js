@@ -1,4 +1,5 @@
 import React from 'react';
+import InterviewsTable from './InterviewsTable';
 
 class Interviews extends React.Component {
   constructor() {
@@ -12,7 +13,6 @@ class Interviews extends React.Component {
       newInterviewAfternoonTeam: '',
       newInterviewHost: '',
     };
-    this.interviewsTable = this.interviewsTable.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.addInterview = this.addInterview.bind(this);
   }
@@ -37,33 +37,6 @@ class Interviews extends React.Component {
         interviews: newState,
       });
     });
-  }
-
-  interviewsTable() {
-    return (
-      <table>
-        <tbody>
-          <tr>
-            <th>Date</th>
-            <th colSpan="2">Morning</th>
-            <th colSpan="2">Afternoon</th>
-            <th>Host</th>
-          </tr>
-          {
-            this.state.interviews.map(i => (
-              <tr key={i.id}>
-                <td>{i.date}</td>
-                <td>{i.morningPair}</td>
-                <td>{i.morningTeam}</td>
-                <td>{i.afternoonPair}</td>
-                <td>{i.afternoonTeam}</td>
-                <td>{i.host}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-    );
   }
 
   handleInputChange(e) {
@@ -99,7 +72,7 @@ class Interviews extends React.Component {
     return (
       <div className="Interviews">
         <h1>Interviews</h1>
-        {this.interviewsTable()}
+        <InterviewsTable interviews={this.state.interviews} />
         <form name="newInterview" onSubmit={this.addInterview}>
           <input
             type="text"

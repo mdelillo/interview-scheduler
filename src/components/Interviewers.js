@@ -1,4 +1,5 @@
 import React from 'react';
+import InterviewersTable from './InterviewersTable';
 
 class Interviewers extends React.Component {
   constructor() {
@@ -8,7 +9,6 @@ class Interviewers extends React.Component {
       newInterviewerName: '',
       newInterviewerTeam: '',
     };
-    this.interviewersTable = this.interviewersTable.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.addInterviewer = this.addInterviewer.bind(this);
   }
@@ -29,23 +29,6 @@ class Interviewers extends React.Component {
         interviewers: newState,
       });
     });
-  }
-
-  interviewersTable() {
-    return (
-      <table>
-        <tbody>
-          {
-            this.state.interviewers.map(i => (
-              <tr key={i.id}>
-                <td>{i.name}</td>
-                <td>{i.team}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-    );
   }
 
   handleInputChange(e) {
@@ -73,7 +56,7 @@ class Interviewers extends React.Component {
     return (
       <div className="Interviewers">
         <h1>Interviewers</h1>
-        {this.interviewersTable()}
+        <InterviewersTable interviewers={this.state.interviewers} />
         <form name="newInterviewer" onSubmit={this.addInterviewer}>
           <input
             type="text"

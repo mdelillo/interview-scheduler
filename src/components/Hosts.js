@@ -1,4 +1,5 @@
 import React from 'react';
+import HostsTable from './HostsTable';
 
 class Hosts extends React.Component {
   constructor() {
@@ -47,17 +48,7 @@ class Hosts extends React.Component {
     return (
       <div className="Hosts">
         <h1>Hosts</h1>
-        <table>
-          <tbody>
-            {
-              this.state.hosts.map(h => (
-                <tr key={h.id}>
-                  <td>{h.name}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
+        <HostsTable hosts={this.state.hosts} />
         <form name="newHost" onSubmit={this.addHost}>
           <input
             type="text"
