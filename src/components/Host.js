@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import HighlightableCell from './HighlightableCell';
 
 const Host = ({ name }) => (
-  <tr><td>{name}</td></tr>
+  <tr>
+    <HighlightableCell value={name} />
+  </tr>
 );
 
 Host.propTypes = {

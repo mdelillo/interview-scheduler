@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import HighlightableCell from './HighlightableCell';
 
 const Interviewer = ({
   date, morningPair, morningTeam, afternoonPair, afternoonTeam, host,
 }) => (
   <tr>
     <td>{date}</td>
-    <td>{morningPair}</td>
-    <td>{morningTeam}</td>
-    <td>{afternoonPair}</td>
-    <td>{afternoonTeam}</td>
-    <td>{host}</td>
+    <HighlightableCell value={morningPair} />
+    <HighlightableCell value={morningTeam} />
+    <HighlightableCell value={afternoonPair} />
+    <HighlightableCell value={afternoonTeam} />
+    <HighlightableCell value={host} />
   </tr>
 );
 

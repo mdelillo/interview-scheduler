@@ -1,7 +1,10 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 import { mount } from 'enzyme';
 import firebase from 'firebase';
 import App from './App';
+import reducers from './reducers';
 
 let firebaseApp;
 let wrapper;
@@ -18,6 +21,17 @@ function submit(name) {
   wrapper.find(`[name="${name}"]`).simulate('submit');
 }
 
+function mountApp() {
+  const store = createStore(reducers);
+  wrapper = mount(<Provider store={store}><App firebase={firebaseApp} /></Provider>);
+}
+
+function unmountApp() {
+  if (wrapper) {
+    wrapper.unmount();
+  }
+}
+
 beforeEach(() => {
   const config = {
     apiKey: process.env.FIREBASE_TEST_API_KEY,
@@ -28,6 +42,63 @@ beforeEach(() => {
     messagingSenderId: process.env.FIREBASE_TEST_MESSAGING_SENDER_ID,
   };
   firebaseApp = firebase.initializeApp(config, `test-${new Date().getTime()}`);
+});
+
+describe('showing and highlighting', () => {
+  beforeEach(async () => {
+    const interviewersRef = firebaseApp.database().ref('interviewers');
+    const hostsRef = firebaseApp.database().ref('hosts');
+    const interviewsRef = firebaseApp.database().ref('interviews');
+    interviewersRef.push({ name: 'person1', team: 'team1' });
+    interviewersRef.push({ name: 'person2', team: 'team2' });
+    interviewersRef.push({ name: 'person3', team: 'team3' });
+    hostsRef.push({ name: 'person2' });
+    hostsRef.push({ name: 'person3' });
+    hostsRef.push({ name: 'person4' });
+    interviewsRef.push({
+      date: '2018-01-02', morningPair: 'person1', morningTeam: 'team0', afternoonPair: 'person2', afternoonTeam: 'team2', host: 'person3',
+    });
+    interviewsRef.push({
+      date: '2018-01-03', morningPair: 'person2', morningTeam: 'team2', afternoonPair: 'person1', afternoonTeam: 'team1', host: 'person4',
+    });
+    interviewsRef.push({
+      date: '2018-01-04', morningPair: 'person1', morningTeam: 'team1', afternoonPair: 'person3', afternoonTeam: 'team3', host: 'person2',
+    });
+    mountApp();
+    await asyncFlush();
+  });
+
+  afterEach(() => {
+    unmountApp();
+    firebaseApp.database().ref('interviewers').remove();
+    firebaseApp.database().ref('hosts').remove();
+    firebaseApp.database().ref('interviews').remove();
+  });
+
+  it('highlights all instances of a name or team when hovered over', (done) => {
+    setTimeout(() => {
+      wrapper.update();
+      expect(wrapper.find('td.highlight')).toHaveLength(0);
+
+      const person2InHosts = wrapper.find('Hosts').find('td').filterWhere(td => td.text() === 'person2');
+      person2InHosts.simulate('mouseenter');
+      expect(wrapper.find('td.highlight').everyWhere(td => td.text() === 'person2')).toBe(true);
+      expect(wrapper.find('Interviews').find('td.highlight')).toHaveLength(3);
+      expect(wrapper.find('Interviewers').find('td.highlight')).toHaveLength(1);
+      expect(wrapper.find('Hosts').find('td.highlight')).toHaveLength(1);
+
+      person2InHosts.simulate('mouseleave');
+      expect(wrapper.find('td.highlight')).toHaveLength(0);
+
+      const team1InInterviewers = wrapper.find('Interviewers').find('td').filterWhere(td => td.text() === 'team1');
+      team1InInterviewers.simulate('mouseenter');
+      expect(wrapper.find('td.highlight').everyWhere(td => td.text() === 'team1')).toBe(true);
+      expect(wrapper.find('Interviews').find('td.highlight')).toHaveLength(2);
+      expect(wrapper.find('Interviewers').find('td.highlight')).toHaveLength(1);
+      expect(wrapper.find('Hosts').find('td.highlight')).toHaveLength(0);
+      done();
+    }, 1000);
+  });
 });
 
 describe('interviews', () => {
@@ -50,12 +121,12 @@ describe('interviews', () => {
       host: 'host-2',
     });
 
-    wrapper = mount(<App firebase={firebaseApp} />);
+    mountApp();
     await asyncFlush();
   });
 
   afterEach(() => {
-    wrapper.unmount();
+    unmountApp();
     firebaseApp.database().ref('interviews').remove();
   });
 
@@ -108,8 +179,8 @@ describe('interviews', () => {
       expect(wrapper.text()).toContain('afternoon-team');
       expect(wrapper.text()).toContain('host');
 
-      wrapper.unmount();
-      wrapper = mount(<App firebase={firebaseApp} />);
+      unmountApp();
+      mountApp();
 
       expect(wrapper.text()).toContain('2018-01-10');
       expect(wrapper.text()).toContain('morning-pair');
@@ -129,12 +200,12 @@ describe('interviewers', () => {
     interviewersRef.push({ name: 'interviewer-2', team: 'team-2' });
     interviewersRef.push({ name: 'interviewer-3', team: 'team-3' });
 
-    wrapper = mount(<App firebase={firebaseApp} />);
+    mountApp();
     await asyncFlush();
   });
 
   afterEach(() => {
-    wrapper.unmount();
+    unmountApp();
     firebaseApp.database().ref('interviewers').remove();
   });
 
@@ -164,8 +235,8 @@ describe('interviewers', () => {
       expect(wrapper.text()).toContain('new-name');
       expect(wrapper.text()).toContain('new-team');
 
-      wrapper.unmount();
-      wrapper = mount(<App firebase={firebaseApp} />);
+      unmountApp();
+      mountApp();
 
       expect(wrapper.text()).toContain('new-name');
       expect(wrapper.text()).toContain('new-team');
@@ -181,12 +252,12 @@ describe('hosts', () => {
     hostsRef.push({ name: 'host-2' });
     hostsRef.push({ name: 'host-3' });
 
-    wrapper = mount(<App firebase={firebaseApp} />);
+    mountApp();
     await asyncFlush();
   });
 
   afterEach(() => {
-    wrapper.unmount();
+    unmountApp();
     firebaseApp.database().ref('hosts').remove();
   });
 
@@ -210,8 +281,8 @@ describe('hosts', () => {
 
       expect(wrapper.text()).toContain('new-name');
 
-      wrapper.unmount();
-      wrapper = mount(<App firebase={firebaseApp} />);
+      unmountApp();
+      mountApp();
 
       expect(wrapper.text()).toContain('new-name');
       done();

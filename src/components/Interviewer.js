@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import HighlightableCell from './HighlightableCell';
 
 const Interviewer = ({ name, team }) => (
   <tr>
-    <td>{name}</td>
-    <td>{team}</td>
+    <HighlightableCell value={name} />
+    <HighlightableCell value={team} />
   </tr>
 );
 
