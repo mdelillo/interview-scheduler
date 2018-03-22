@@ -8,6 +8,16 @@ let wrapper;
 
 const asyncFlush = () => new Promise(resolve => setTimeout(resolve, 0));
 
+function setText(inputName, value) {
+  const input = wrapper.find(`input[name="${inputName}"]`);
+  input.instance().value = value;
+  input.simulate('change');
+}
+
+function submit(name) {
+  wrapper.find(`[name="${name}"]`).simulate('submit');
+}
+
 beforeEach(() => {
   const config = {
     apiKey: process.env.FIREBASE_TEST_API_KEY,
@@ -25,18 +35,18 @@ describe('interviews', () => {
     const interviewsRef = firebaseApp.database().ref('interviews');
     interviewsRef.push({
       date: '2018-01-03',
-      morning_pair: 'interviewer-1',
-      morning_team: 'team-1',
-      afternoon_pair: 'interviewer-2',
-      afternoon_team: 'team-2',
+      morningPair: 'interviewer-1',
+      morningTeam: 'team-1',
+      afternoonPair: 'interviewer-2',
+      afternoonTeam: 'team-2',
       host: 'host-1',
     });
     interviewsRef.push({
       date: '2018-01-04',
-      morning_pair: 'interviewer-3',
-      morning_team: 'team-3',
-      afternoon_pair: 'interviewer-4',
-      afternoon_team: 'team-4',
+      morningPair: 'interviewer-3',
+      morningTeam: 'team-3',
+      afternoonPair: 'interviewer-4',
+      afternoonTeam: 'team-4',
       host: 'host-2',
     });
 
@@ -73,6 +83,43 @@ describe('interviews', () => {
       done();
     }, 1000);
   });
+
+  it('adds new interviews', (done) => {
+    expect(wrapper.text()).not.toContain('2018-01-10');
+    expect(wrapper.text()).not.toContain('morning-pair');
+    expect(wrapper.text()).not.toContain('morning-team');
+    expect(wrapper.text()).not.toContain('afternoon-pair');
+    expect(wrapper.text()).not.toContain('afternoon-team');
+    expect(wrapper.text()).not.toContain('host');
+
+    setTimeout(() => {
+      setText('newInterviewDate', '2018-01-10');
+      setText('newInterviewMorningPair', 'morning-pair');
+      setText('newInterviewMorningTeam', 'morning-team');
+      setText('newInterviewAfternoonPair', 'afternoon-pair');
+      setText('newInterviewAfternoonTeam', 'afternoon-team');
+      setText('newInterviewHost', 'host');
+      submit('newInterview');
+
+      expect(wrapper.text()).toContain('2018-01-10');
+      expect(wrapper.text()).toContain('morning-pair');
+      expect(wrapper.text()).toContain('morning-team');
+      expect(wrapper.text()).toContain('afternoon-pair');
+      expect(wrapper.text()).toContain('afternoon-team');
+      expect(wrapper.text()).toContain('host');
+
+      wrapper.unmount();
+      wrapper = mount(<App firebase={firebaseApp} />);
+
+      expect(wrapper.text()).toContain('2018-01-10');
+      expect(wrapper.text()).toContain('morning-pair');
+      expect(wrapper.text()).toContain('morning-team');
+      expect(wrapper.text()).toContain('afternoon-pair');
+      expect(wrapper.text()).toContain('afternoon-team');
+      expect(wrapper.text()).toContain('host');
+      done();
+    }, 1000);
+  });
 });
 
 describe('interviewers', () => {
@@ -104,6 +151,27 @@ describe('interviewers', () => {
       done();
     }, 1000);
   });
+
+  it('adds new interviewers', (done) => {
+    expect(wrapper.text()).not.toContain('new-name');
+    expect(wrapper.text()).not.toContain('new-team');
+
+    setTimeout(() => {
+      setText('newInterviewerName', 'new-name');
+      setText('newInterviewerTeam', 'new-team');
+      submit('newInterviewer');
+
+      expect(wrapper.text()).toContain('new-name');
+      expect(wrapper.text()).toContain('new-team');
+
+      wrapper.unmount();
+      wrapper = mount(<App firebase={firebaseApp} />);
+
+      expect(wrapper.text()).toContain('new-name');
+      expect(wrapper.text()).toContain('new-team');
+      done();
+    }, 1000);
+  });
 });
 
 describe('hosts', () => {
@@ -129,6 +197,23 @@ describe('hosts', () => {
       expect(wrapper.text()).toContain('host-1');
       expect(wrapper.text()).toContain('host-2');
       expect(wrapper.text()).toContain('host-3');
+      done();
+    }, 1000);
+  });
+
+  it('adds new hosts', (done) => {
+    expect(wrapper.text()).not.toContain('new-name');
+
+    setTimeout(() => {
+      setText('newHostName', 'new-name');
+      submit('newHost');
+
+      expect(wrapper.text()).toContain('new-name');
+
+      wrapper.unmount();
+      wrapper = mount(<App firebase={firebaseApp} />);
+
+      expect(wrapper.text()).toContain('new-name');
       done();
     }, 1000);
   });
