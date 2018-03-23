@@ -44,7 +44,7 @@ beforeEach(() => {
   firebaseApp = firebase.initializeApp(config, `test-${new Date().getTime()}`);
 });
 
-describe('showing and highlighting', () => {
+describe('App', () => {
   beforeEach(async () => {
     const interviewersRef = firebaseApp.database().ref('interviewers');
     const hostsRef = firebaseApp.database().ref('hosts');
@@ -78,6 +78,85 @@ describe('showing and highlighting', () => {
     firebaseApp.database().ref('interviews').remove();
   });
 
+  it('shows existing interviews, interviewers, and hosts', (done) => {
+    setTimeout(() => {
+      const interviews = wrapper.find('Interviews');
+      expect(interviews.text()).toContain('Interviews');
+      expect(interviews.text()).toContain('Date');
+      expect(interviews.text()).toContain('Morning');
+      expect(interviews.text()).toContain('Afternoon');
+      expect(interviews.text()).toContain('Host');
+      expect(interviews.text()).toContain('2018-01-02');
+      expect(interviews.text()).toContain('person1');
+      expect(interviews.text()).toContain('team0');
+      expect(interviews.text()).toContain('person2');
+      expect(interviews.text()).toContain('team2');
+      expect(interviews.text()).toContain('person3');
+
+      const interviewers = wrapper.find('Interviewers');
+      expect(interviewers.text()).toContain('Interviewers');
+      expect(interviewers.text()).toContain('person1');
+      expect(interviewers.text()).toContain('person2');
+      expect(interviewers.text()).toContain('person3');
+      expect(interviewers.text()).toContain('team1');
+      expect(interviewers.text()).toContain('team2');
+      expect(interviewers.text()).toContain('team3');
+      expect(interviewers.text()).not.toContain('person4');
+      expect(interviewers.text()).not.toContain('team0');
+
+      const hosts = wrapper.find('Hosts');
+      expect(hosts.text()).toContain('Hosts');
+      expect(hosts.text()).toContain('person2');
+      expect(hosts.text()).toContain('person3');
+      expect(hosts.text()).toContain('person4');
+      expect(hosts.text()).not.toContain('person1');
+      done();
+    }, 1000);
+  });
+
+  it('adds new interviews, interviewers, and hosts', (done) => {
+    setTimeout(() => {
+      setText('newInterviewDate', '2018-01-10');
+      setText('newInterviewMorningPair', 'new-interview-morning-pair');
+      setText('newInterviewMorningTeam', 'new-interview-morning-team');
+      setText('newInterviewAfternoonPair', 'new-interview-afternoon-pair');
+      setText('newInterviewAfternoonTeam', 'new-interview-afternoon-team');
+      setText('newInterviewHost', 'new-interview-host');
+      submit('newInterview');
+      expect(wrapper.text()).toContain('2018-01-10');
+      expect(wrapper.text()).toContain('new-interview-morning-pair');
+      expect(wrapper.text()).toContain('new-interview-morning-team');
+      expect(wrapper.text()).toContain('new-interview-afternoon-pair');
+      expect(wrapper.text()).toContain('new-interview-afternoon-team');
+      expect(wrapper.text()).toContain('new-interview-host');
+
+      setText('newInterviewerName', 'new-interviewer-name');
+      setText('newInterviewerTeam', 'new-interviewer-team');
+      submit('newInterviewer');
+      expect(wrapper.text()).toContain('new-interviewer-name');
+      expect(wrapper.text()).toContain('new-interviewer-team');
+
+      setText('newHostName', 'new-host-name');
+      submit('newHost');
+      expect(wrapper.text()).toContain('new-host-name');
+
+      unmountApp();
+      mountApp();
+
+      expect(wrapper.text()).toContain('2018-01-10');
+      expect(wrapper.text()).toContain('new-interview-morning-pair');
+      expect(wrapper.text()).toContain('new-interview-morning-team');
+      expect(wrapper.text()).toContain('new-interview-afternoon-pair');
+      expect(wrapper.text()).toContain('new-interview-afternoon-team');
+      expect(wrapper.text()).toContain('new-interview-host');
+      expect(wrapper.text()).toContain('new-interviewer-name');
+      expect(wrapper.text()).toContain('new-interviewer-team');
+      expect(wrapper.text()).toContain('new-host-name');
+
+      done();
+    }, 1000);
+  });
+
   it('highlights all instances of a name or team when hovered over', (done) => {
     setTimeout(() => {
       wrapper.update();
@@ -99,195 +178,6 @@ describe('showing and highlighting', () => {
       expect(wrapper.find('Interviews').find('td.highlight')).toHaveLength(2);
       expect(wrapper.find('Interviewers').find('td.highlight')).toHaveLength(1);
       expect(wrapper.find('Hosts').find('td.highlight')).toHaveLength(0);
-      done();
-    }, 1000);
-  });
-});
-
-describe('interviews', () => {
-  beforeEach(async () => {
-    const interviewsRef = firebaseApp.database().ref('interviews');
-    interviewsRef.push({
-      date: '2018-01-03',
-      morningPair: 'interviewer-1',
-      morningTeam: 'team-1',
-      afternoonPair: 'interviewer-2',
-      afternoonTeam: 'team-2',
-      host: 'host-1',
-    });
-    interviewsRef.push({
-      date: '2018-01-04',
-      morningPair: 'interviewer-3',
-      morningTeam: 'team-3',
-      afternoonPair: 'interviewer-4',
-      afternoonTeam: 'team-4',
-      host: 'host-2',
-    });
-
-    mountApp();
-    await asyncFlush();
-  });
-
-  afterEach(() => {
-    unmountApp();
-    firebaseApp.database().ref('interviews').remove();
-  });
-
-  it('shows interviews', (done) => {
-    setTimeout(() => {
-      expect(wrapper.text()).toContain('Interviews');
-      expect(wrapper.text()).toContain('Date');
-      expect(wrapper.text()).toContain('Morning');
-      expect(wrapper.text()).toContain('Afternoon');
-      expect(wrapper.text()).toContain('Host');
-
-      expect(wrapper.text()).toContain('2018-01-03');
-      expect(wrapper.text()).toContain('interviewer-1');
-      expect(wrapper.text()).toContain('team-1');
-      expect(wrapper.text()).toContain('interviewer-2');
-      expect(wrapper.text()).toContain('team-2');
-      expect(wrapper.text()).toContain('host-1');
-
-      expect(wrapper.text()).toContain('2018-01-04');
-      expect(wrapper.text()).toContain('interviewer-3');
-      expect(wrapper.text()).toContain('team-3');
-      expect(wrapper.text()).toContain('interviewer-4');
-      expect(wrapper.text()).toContain('team-4');
-      expect(wrapper.text()).toContain('host-2');
-      done();
-    }, 1000);
-  });
-
-  it('adds new interviews', (done) => {
-    expect(wrapper.text()).not.toContain('2018-01-10');
-    expect(wrapper.text()).not.toContain('morning-pair');
-    expect(wrapper.text()).not.toContain('morning-team');
-    expect(wrapper.text()).not.toContain('afternoon-pair');
-    expect(wrapper.text()).not.toContain('afternoon-team');
-    expect(wrapper.text()).not.toContain('host');
-
-    setTimeout(() => {
-      setText('newInterviewDate', '2018-01-10');
-      setText('newInterviewMorningPair', 'morning-pair');
-      setText('newInterviewMorningTeam', 'morning-team');
-      setText('newInterviewAfternoonPair', 'afternoon-pair');
-      setText('newInterviewAfternoonTeam', 'afternoon-team');
-      setText('newInterviewHost', 'host');
-      submit('newInterview');
-
-      expect(wrapper.text()).toContain('2018-01-10');
-      expect(wrapper.text()).toContain('morning-pair');
-      expect(wrapper.text()).toContain('morning-team');
-      expect(wrapper.text()).toContain('afternoon-pair');
-      expect(wrapper.text()).toContain('afternoon-team');
-      expect(wrapper.text()).toContain('host');
-
-      unmountApp();
-      mountApp();
-
-      expect(wrapper.text()).toContain('2018-01-10');
-      expect(wrapper.text()).toContain('morning-pair');
-      expect(wrapper.text()).toContain('morning-team');
-      expect(wrapper.text()).toContain('afternoon-pair');
-      expect(wrapper.text()).toContain('afternoon-team');
-      expect(wrapper.text()).toContain('host');
-      done();
-    }, 1000);
-  });
-});
-
-describe('interviewers', () => {
-  beforeEach(async () => {
-    const interviewersRef = firebaseApp.database().ref('interviewers');
-    interviewersRef.push({ name: 'interviewer-1', team: 'team-1' });
-    interviewersRef.push({ name: 'interviewer-2', team: 'team-2' });
-    interviewersRef.push({ name: 'interviewer-3', team: 'team-3' });
-
-    mountApp();
-    await asyncFlush();
-  });
-
-  afterEach(() => {
-    unmountApp();
-    firebaseApp.database().ref('interviewers').remove();
-  });
-
-  it('shows interviewers and teams', (done) => {
-    setTimeout(() => {
-      expect(wrapper.text()).toContain('Interviewers');
-
-      expect(wrapper.text()).toContain('interviewer-1');
-      expect(wrapper.text()).toContain('interviewer-2');
-      expect(wrapper.text()).toContain('interviewer-3');
-      expect(wrapper.text()).toContain('team-1');
-      expect(wrapper.text()).toContain('team-2');
-      expect(wrapper.text()).toContain('team-3');
-      done();
-    }, 1000);
-  });
-
-  it('adds new interviewers', (done) => {
-    expect(wrapper.text()).not.toContain('new-name');
-    expect(wrapper.text()).not.toContain('new-team');
-
-    setTimeout(() => {
-      setText('newInterviewerName', 'new-name');
-      setText('newInterviewerTeam', 'new-team');
-      submit('newInterviewer');
-
-      expect(wrapper.text()).toContain('new-name');
-      expect(wrapper.text()).toContain('new-team');
-
-      unmountApp();
-      mountApp();
-
-      expect(wrapper.text()).toContain('new-name');
-      expect(wrapper.text()).toContain('new-team');
-      done();
-    }, 1000);
-  });
-});
-
-describe('hosts', () => {
-  beforeEach(async () => {
-    const hostsRef = firebaseApp.database().ref('hosts');
-    hostsRef.push({ name: 'host-1' });
-    hostsRef.push({ name: 'host-2' });
-    hostsRef.push({ name: 'host-3' });
-
-    mountApp();
-    await asyncFlush();
-  });
-
-  afterEach(() => {
-    unmountApp();
-    firebaseApp.database().ref('hosts').remove();
-  });
-
-  it('shows hosts', (done) => {
-    setTimeout(() => {
-      expect(wrapper.text()).toContain('Hosts');
-
-      expect(wrapper.text()).toContain('host-1');
-      expect(wrapper.text()).toContain('host-2');
-      expect(wrapper.text()).toContain('host-3');
-      done();
-    }, 1000);
-  });
-
-  it('adds new hosts', (done) => {
-    expect(wrapper.text()).not.toContain('new-name');
-
-    setTimeout(() => {
-      setText('newHostName', 'new-name');
-      submit('newHost');
-
-      expect(wrapper.text()).toContain('new-name');
-
-      unmountApp();
-      mountApp();
-
-      expect(wrapper.text()).toContain('new-name');
       done();
     }, 1000);
   });
