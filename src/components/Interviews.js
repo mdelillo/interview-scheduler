@@ -73,6 +73,7 @@ class Interviews extends React.Component {
       <div className="Interviews">
         <h1>Interviews</h1>
         <InterviewsTable interviews={this.state.interviews} />
+        <br />
         <form name="newInterview" onSubmit={this.addInterview}>
           <input
             type="text"
@@ -81,6 +82,7 @@ class Interviews extends React.Component {
             onChange={this.handleInputChange}
             placeholder="Date"
           />
+          <br />
           <input
             type="text"
             name="newInterviewMorningPair"
@@ -88,6 +90,7 @@ class Interviews extends React.Component {
             onChange={this.handleInputChange}
             placeholder="Morning Pair"
           />
+          <br />
           <input
             type="text"
             name="newInterviewMorningTeam"
@@ -95,6 +98,7 @@ class Interviews extends React.Component {
             onChange={this.handleInputChange}
             placeholder="Morning Team"
           />
+          <br />
           <input
             type="text"
             name="newInterviewAfternoonPair"
@@ -102,6 +106,7 @@ class Interviews extends React.Component {
             onChange={this.handleInputChange}
             placeholder="Afternoon Pair"
           />
+          <br />
           <input
             type="text"
             name="newInterviewAfternoonTeam"
@@ -109,6 +114,7 @@ class Interviews extends React.Component {
             onChange={this.handleInputChange}
             placeholder="Afternoon Team"
           />
+          <br />
           <input
             type="text"
             name="newInterviewHost"
@@ -116,6 +122,7 @@ class Interviews extends React.Component {
             onChange={this.handleInputChange}
             placeholder="Host"
           />
+          <br />
           <input
             type="submit"
             value="Add Interview"

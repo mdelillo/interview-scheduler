@@ -1,7 +1,42 @@
 .App {
+  display: grid;
+  grid-template-columns: repeat(4, max-content);
+  grid-gap: 30px;
+}
+
+.App > div {
+  padding: 0px 30px;
+}
+
+h1 {
   text-align: center;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th,td {
+  cursor: default;
+  padding: 5px;
 }
 
 td.highlight {
   background-color: palegreen;
+}
+
+form {
+  display: table;
+}
+
+form p {
+  display: table-row;
+}
+
+input {
+  display: table-cell;
+}
+
+input[type="text"] {
+  width: 100px;
 }

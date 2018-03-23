@@ -49,6 +49,7 @@ class Hosts extends React.Component {
       <div className="Hosts">
         <h1>Hosts</h1>
         <HostsTable hosts={this.state.hosts} />
+        <br />
         <form name="newHost" onSubmit={this.addHost}>
           <input
             type="text"
@@ -57,6 +58,7 @@ class Hosts extends React.Component {
             onChange={this.handleInputChange}
             placeholder="Name"
           />
+          <br />
           <input
             type="submit"
             value="Add Host"

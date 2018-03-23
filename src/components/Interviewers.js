@@ -57,6 +57,7 @@ class Interviewers extends React.Component {
       <div className="Interviewers">
         <h1>Interviewers</h1>
         <InterviewersTable interviewers={this.state.interviewers} />
+        <br />
         <form name="newInterviewer" onSubmit={this.addInterviewer}>
           <input
             type="text"
@@ -65,6 +66,7 @@ class Interviewers extends React.Component {
             onChange={this.handleInputChange}
             placeholder="Name"
           />
+          <br />
           <input
             type="text"
             name="newInterviewerTeam"
@@ -72,6 +74,7 @@ class Interviewers extends React.Component {
             onChange={this.handleInputChange}
             placeholder="Team"
           />
+          <br />
           <input
             type="submit"
             value="Add Interviewer"
