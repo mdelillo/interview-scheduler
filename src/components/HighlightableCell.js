@@ -6,7 +6,7 @@ import { setHighlight, clearHighlight } from '../actions';
 const highlightableCell = ({
   value, highlightValue, onMouseEnter, onMouseLeave,
 }) => {
-  const highlightClass = value === highlightValue ? 'highlight' : '';
+  const highlightClass = highlightValue && value === highlightValue ? 'highlight' : '';
   return (
     <td
       className={highlightClass}

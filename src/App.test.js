@@ -56,6 +56,9 @@ describe('showing and highlighting', () => {
     hostsRef.push({ name: 'person3' });
     hostsRef.push({ name: 'person4' });
     interviewsRef.push({
+      date: '2018-01-01', morningPair: '', morningTeam: '', afternoonPair: '', afternoonTeam: '', host: '',
+    });
+    interviewsRef.push({
       date: '2018-01-02', morningPair: 'person1', morningTeam: 'team0', afternoonPair: 'person2', afternoonTeam: 'team2', host: 'person3',
     });
     interviewsRef.push({
