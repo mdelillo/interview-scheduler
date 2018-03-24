@@ -1,13 +1,13 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
 import { mount } from 'enzyme';
 import firebase from 'firebase';
 import App from './App';
-import reducers from './reducers';
+import configureStore from './store';
 
 let firebaseApp;
 let wrapper;
+let store;
 
 const asyncFlush = () => new Promise(resolve => setTimeout(resolve, 0));
 
@@ -22,7 +22,6 @@ function submit(name) {
 }
 
 function mountApp() {
-  const store = createStore(reducers);
   wrapper = mount(<Provider store={store}><App firebase={firebaseApp} /></Provider>);
 }
 
@@ -32,7 +31,7 @@ function unmountApp() {
   }
 }
 
-beforeEach(() => {
+beforeAll(() => {
   const config = {
     apiKey: process.env.FIREBASE_TEST_API_KEY,
     authDomain: process.env.FIREBASE_TEST_AUTH_DOMAIN,
@@ -41,7 +40,12 @@ beforeEach(() => {
     storageBucket: process.env.FIREBASE_TEST_STORAGE_BUCKET,
     messagingSenderId: process.env.FIREBASE_TEST_MESSAGING_SENDER_ID,
   };
+  store = configureStore(config);
   firebaseApp = firebase.initializeApp(config, `test-${new Date().getTime()}`);
+});
+
+afterAll(() => {
+  firebaseApp.database().goOffline();
 });
 
 describe('App', () => {

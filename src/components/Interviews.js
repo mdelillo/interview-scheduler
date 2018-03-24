@@ -1,11 +1,14 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
+import { firebaseObjectToArray } from '../firebase';
 import InterviewsTable from './InterviewsTable';
 
 class Interviews extends React.Component {
   constructor() {
     super();
     this.state = {
-      interviews: [],
       newInterviewDate: '',
       newInterviewMorningPair: '',
       newInterviewMorningTeam: '',
@@ -17,28 +20,6 @@ class Interviews extends React.Component {
     this.addInterview = this.addInterview.bind(this);
   }
 
-  componentDidMount() {
-    const interviewsRef = this.props.firebase.database().ref('interviews');
-    interviewsRef.on('value', (snapshot) => {
-      const interviews = snapshot.val();
-      const newState = [];
-      for (const interview in interviews) {
-        newState.push({
-          id: interview,
-          date: interviews[interview].date,
-          morningPair: interviews[interview].morningPair,
-          morningTeam: interviews[interview].morningTeam,
-          afternoonPair: interviews[interview].afternoonPair,
-          afternoonTeam: interviews[interview].afternoonTeam,
-          host: interviews[interview].host,
-        });
-      }
-      this.setState({
-        interviews: newState,
-      });
-    });
-  }
-
   handleInputChange(e) {
     this.setState({
       [e.target.name]: e.target.value,
@@ -47,32 +28,38 @@ class Interviews extends React.Component {
 
   addInterview(e) {
     e.preventDefault();
-    const interviewsRef = this.props.firebase.database().ref('interviews');
-    const newInterviewRef = interviewsRef.push();
-    newInterviewRef.set({
+    this.props.firebase.push('/interviews', {
       date: this.state.newInterviewDate,
       morningPair: this.state.newInterviewMorningPair,
       morningTeam: this.state.newInterviewMorningTeam,
       afternoonPair: this.state.newInterviewAfternoonPair,
       afternoonTeam: this.state.newInterviewAfternoonTeam,
       host: this.state.newInterviewHost,
-    });
-    e.target.reset();
-    this.setState({
-      newInterviewDate: '',
-      newInterviewMorningPair: '',
-      newInterviewMorningTeam: '',
-      newInterviewAfternoonPair: '',
-      newInterviewAfternoonTeam: '',
-      newInterviewHost: '',
+    }).then(() => {
+      this.setState({
+        newInterviewDate: '',
+        newInterviewMorningPair: '',
+        newInterviewMorningTeam: '',
+        newInterviewAfternoonPair: '',
+        newInterviewAfternoonTeam: '',
+        newInterviewHost: '',
+      });
     });
   }
 
   render() {
+    const { interviews } = this.props;
+
+    if (!isLoaded(interviews)) {
+      return <p>Loading interviews</p>;
+    } else if (isEmpty(interviews)) {
+      return <p>No interviews</p>;
+    }
+
     return (
       <div className="Interviews">
         <h1>Interviews</h1>
-        <InterviewsTable interviews={this.state.interviews} />
+        <InterviewsTable interviews={firebaseObjectToArray(interviews)} />
         <br />
         <form name="newInterview" onSubmit={this.addInterview}>
           <input
@@ -133,4 +120,9 @@ class Interviews extends React.Component {
   }
 }
 
-export default Interviews;
+export default compose(
+  firebaseConnect(['interviews']),
+  connect(({ firebase }) => ({
+    interviews: firebase.data.interviews,
+  })),
+)(Interviews);
