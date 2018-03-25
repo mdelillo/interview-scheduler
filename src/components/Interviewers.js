@@ -36,9 +36,9 @@ class Interviewers extends React.Component {
   }
 
   render() {
-    const { interviewers } = this.props;
+    const { interviewers, interviews } = this.props;
 
-    if (!isLoaded(interviewers)) {
+    if (!isLoaded(interviewers) || !isLoaded(interviews)) {
       return <p>Loading interviewers</p>;
     } else if (isEmpty(interviewers)) {
       return <p>No interviewers</p>;
@@ -47,7 +47,10 @@ class Interviewers extends React.Component {
     return (
       <div className="Interviewers">
         <h1>Interviewers</h1>
-        <InterviewersTable interviewers={firebaseObjectToArray(interviewers)} />
+        <InterviewersTable
+          interviewers={firebaseObjectToArray(interviewers)}
+          interviews={firebaseObjectToArray(interviews)}
+        />
         <br />
         <form name="newInterviewer" onSubmit={this.addInterviewer}>
           <input
@@ -77,8 +80,9 @@ class Interviewers extends React.Component {
 }
 
 export default compose(
-  firebaseConnect(['interviewers']),
+  firebaseConnect(['interviewers', 'interviews']),
   connect(({ firebase }) => ({
     interviewers: firebase.data.interviewers,
+    interviews: firebase.data.interviews,
   })),
 )(Interviewers);

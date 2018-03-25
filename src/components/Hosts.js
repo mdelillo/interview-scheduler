@@ -30,9 +30,9 @@ class Hosts extends React.Component {
   }
 
   render() {
-    const { hosts } = this.props;
+    const { hosts, interviews } = this.props;
 
-    if (!isLoaded(hosts)) {
+    if (!isLoaded(hosts) || !isLoaded(interviews)) {
       return <p>Loading hosts</p>;
     } else if (isEmpty(hosts)) {
       return <p>No hosts</p>;
@@ -41,7 +41,10 @@ class Hosts extends React.Component {
     return (
       <div className="Hosts">
         <h1>Hosts</h1>
-        <HostsTable hosts={firebaseObjectToArray(hosts)} />
+        <HostsTable
+          hosts={firebaseObjectToArray(hosts)}
+          interviews={firebaseObjectToArray(interviews)}
+        />
         <br />
         <form name="newHost" onSubmit={this.addHost}>
           <input
@@ -63,8 +66,9 @@ class Hosts extends React.Component {
 }
 
 export default compose(
-  firebaseConnect(['hosts']),
+  firebaseConnect(['hosts', 'interviews']),
   connect(({ firebase }) => ({
     hosts: firebase.data.hosts,
+    interviews: firebase.data.interviews,
   })),
 )(Hosts);

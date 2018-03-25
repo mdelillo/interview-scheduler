@@ -28,4 +28,12 @@ describe('firebaseObjectToArray', () => {
 
     expect(firebaseObjectToArray(obj)).toEqual(expectedArray);
   });
+
+  describe('when the object is not defined', () => {
+    it('returns an empty array', () => {
+      expect(firebaseObjectToArray()).toEqual([]);
+      expect(firebaseObjectToArray(null)).toEqual([]);
+      expect(firebaseObjectToArray(undefined)).toEqual([]);
+    });
+  });
 });

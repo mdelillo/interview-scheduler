@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Interview from './Interview';
+import { sortInterviews } from '../sort';
 
 const InterviewsTable = ({ interviews }) => (
   <table>
@@ -12,7 +13,7 @@ const InterviewsTable = ({ interviews }) => (
         <th>Host</th>
       </tr>
       {
-        interviews.map(interview => (
+        sortInterviews(interviews).map(interview => (
           <Interview key={interview.id} {...interview} />
         ))
       }

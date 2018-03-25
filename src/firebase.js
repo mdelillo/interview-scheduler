@@ -8,6 +8,9 @@ export const firebaseConfig = {
 };
 
 export function firebaseObjectToArray(obj) {
+  if (!obj) {
+    return [];
+  }
   return Object.keys(obj).map(key => (
     Object.assign(obj[key], { id: key })
   ));
