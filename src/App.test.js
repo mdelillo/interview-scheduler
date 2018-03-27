@@ -76,10 +76,8 @@ describe('App', () => {
   });
 
   afterEach(() => {
+    firebaseApp.database().ref().remove();
     unmountApp();
-    firebaseApp.database().ref('interviewers').remove();
-    firebaseApp.database().ref('hosts').remove();
-    firebaseApp.database().ref('interviews').remove();
   });
 
   it('shows existing interviews, interviewers, and hosts', (done) => {
