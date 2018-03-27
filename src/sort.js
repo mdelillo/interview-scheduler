@@ -25,7 +25,7 @@ export function sortInterviews(interviews) {
     if (interview1.date !== interview2.date) {
       return Date.parse(interview2.date) - Date.parse(interview1.date);
     }
-    return interview1.id > interview2.id;
+    return interview1.id < interview2.id;
   });
 }
 
