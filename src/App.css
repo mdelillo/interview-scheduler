@@ -25,6 +25,10 @@ td.highlight {
   background-color: lime;
 }
 
+span.clickable {
+  cursor: pointer;
+}
+
 form {
   display: table;
 }

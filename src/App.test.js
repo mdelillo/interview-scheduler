@@ -116,7 +116,7 @@ describe('App', () => {
     }, 1000);
   });
 
-  it('adds new interviews, interviewers, and hosts', (done) => {
+  it('adds and deletes interviews, interviewers, and hosts', (done) => {
     setTimeout(() => {
       setText('newInterviewDate', '2018-01-10');
       setText('newInterviewMorningPair', 'new-interview-morning-pair');
@@ -155,7 +155,36 @@ describe('App', () => {
       expect(wrapper.text()).toContain('new-interviewer-team');
       expect(wrapper.text()).toContain('new-host-name');
 
-      done();
+      wrapper.find('Interview').find('MdDelete').first().simulate('click');
+      wrapper.find('Interviewer').find('MdDelete').first().simulate('click');
+      wrapper.find('Host').find('MdDelete').first().simulate('click');
+
+      setTimeout(() => {
+        wrapper.update();
+        const interviews = wrapper.find('Interviews');
+        expect(interviews.find('tr')).toHaveLength(5);
+        expect(interviews.text()).not.toContain('2018-01-10');
+        expect(interviews.text()).toContain('2018-01-04');
+        expect(interviews.text()).toContain('2018-01-03');
+        expect(interviews.text()).toContain('2018-01-02');
+        expect(interviews.text()).toContain('2018-01-01');
+
+        const interviewers = wrapper.find('Interviewers');
+        expect(interviewers.find('tr')).toHaveLength(3);
+        expect(interviewers.text()).not.toContain('new-interviewer-name');
+        expect(interviewers.text()).toContain('person1');
+        expect(interviewers.text()).toContain('person2');
+        expect(interviewers.text()).toContain('person3');
+
+        const hosts = wrapper.find('Hosts');
+        expect(hosts.find('tr')).toHaveLength(3);
+        expect(interviewers.text()).not.toContain('new-host-name');
+        expect(hosts.text()).toContain('person2');
+        expect(hosts.text()).toContain('person3');
+        expect(hosts.text()).toContain('person4');
+
+        done();
+      }, 100);
     }, 1000);
   });
 

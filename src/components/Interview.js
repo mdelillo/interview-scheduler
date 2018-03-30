@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { firebaseConnect } from 'react-redux-firebase';
+import MdDelete from 'react-icons/lib/md/delete';
 import HighlightableCell from './HighlightableCell';
 import weekNumber from '../weekNumber';
 
-const Interviewer = ({
-  date, morningPair, morningTeam, afternoonPair, afternoonTeam, host,
+const Interview = ({
+  firebase, id, date, morningPair, morningTeam, afternoonPair, afternoonTeam, host,
 }) => {
+  const removeInterview = () => { firebase.remove(`interviews/${id}`); };
   const backgroundColors = ['#ccccff', '#ffcccc', '#ffffcc', '#ccffcc'];
   const bgcolor = backgroundColors[weekNumber(date) % 4];
   return (
@@ -16,11 +19,14 @@ const Interviewer = ({
       <HighlightableCell value={afternoonPair} />
       <HighlightableCell value={afternoonTeam} />
       <HighlightableCell value={host} />
+      <td><span className="clickable"><MdDelete onClick={removeInterview} /></span></td>
     </tr>
   );
 };
 
-Interviewer.propTypes = {
+Interview.propTypes = {
+  firebase: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   morningPair: PropTypes.string.isRequired,
   morningTeam: PropTypes.string.isRequired,
@@ -29,4 +35,4 @@ Interviewer.propTypes = {
   host: PropTypes.string.isRequired,
 };
 
-export default Interviewer;
+export default firebaseConnect()(Interview);
