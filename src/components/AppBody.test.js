@@ -2,8 +2,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { mount } from 'enzyme';
 import firebase from 'firebase';
-import App from './App';
-import configureStore from './store';
+import AppBody from './AppBody';
+import configureStore from '../store';
 
 let firebaseApp;
 let wrapper;
@@ -22,7 +22,7 @@ function submit(name) {
 }
 
 function mountApp() {
-  wrapper = mount(<Provider store={store}><App firebase={firebaseApp} /></Provider>);
+  wrapper = mount(<Provider store={store}><AppBody loggedIn loginFunc={() => {}} /></Provider>);
 }
 
 function unmountApp() {
@@ -48,7 +48,7 @@ afterAll(() => {
   firebaseApp.database().goOffline();
 });
 
-describe('App', () => {
+describe('AppBody', () => {
   beforeEach(async () => {
     const interviewersRef = firebaseApp.database().ref('interviewers');
     const hostsRef = firebaseApp.database().ref('hosts');
@@ -82,8 +82,9 @@ describe('App', () => {
 
   it('shows existing interviews, interviewers, and hosts', (done) => {
     setTimeout(() => {
+      wrapper.update();
+
       const interviews = wrapper.find('Interviews');
-      expect(interviews.text()).toContain('Interviews');
       expect(interviews.text()).toContain('Date');
       expect(interviews.text()).toContain('Morning');
       expect(interviews.text()).toContain('Afternoon');
@@ -113,7 +114,7 @@ describe('App', () => {
       expect(hosts.text()).toContain('person4');
       expect(hosts.text()).not.toContain('person1');
       done();
-    }, 1000);
+    }, 500);
   });
 
   it('adds and deletes interviews, interviewers, and hosts', (done) => {
@@ -183,9 +184,16 @@ describe('App', () => {
         expect(hosts.text()).toContain('person3');
         expect(hosts.text()).toContain('person4');
 
+        unmountApp();
+        mountApp();
+
+        expect(wrapper.text()).not.toContain('2018-01-10');
+        expect(wrapper.text()).not.toContain('new-interviewer-name');
+        expect(wrapper.text()).not.toContain('new-host-name');
+
         done();
       }, 100);
-    }, 1000);
+    }, 500);
   });
 
   it('highlights all instances of a name or team when hovered over', (done) => {
@@ -210,6 +218,6 @@ describe('App', () => {
       expect(wrapper.find('Interviewers').find('td.highlight')).toHaveLength(1);
       expect(wrapper.find('Hosts').find('td.highlight')).toHaveLength(0);
       done();
-    }, 1000);
+    }, 500);
   });
 });

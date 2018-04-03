@@ -25,7 +25,9 @@ const Interview = ({
 };
 
 Interview.propTypes = {
-  firebase: PropTypes.object.isRequired,
+  firebase: PropTypes.shape({
+    remove: PropTypes.func.isRequired,
+  }).isRequired,
   id: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   morningPair: PropTypes.string.isRequired,

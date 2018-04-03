@@ -15,7 +15,9 @@ const Host = ({ firebase, id, name }) => {
 };
 
 Host.propTypes = {
-  firebase: PropTypes.object.isRequired,
+  firebase: PropTypes.shape({
+    remove: PropTypes.func.isRequired,
+  }).isRequired,
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
 };

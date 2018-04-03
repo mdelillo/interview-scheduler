@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
@@ -40,7 +41,7 @@ class Hosts extends React.Component {
 
     return (
       <div className="Hosts">
-        <h1>Hosts</h1>
+        <h2>Hosts</h2>
         <HostsTable
           hosts={firebaseObjectToArray(hosts)}
           interviews={firebaseObjectToArray(interviews)}
@@ -64,6 +65,19 @@ class Hosts extends React.Component {
     );
   }
 }
+
+Hosts.propTypes = {
+  hosts: PropTypes.object,
+  interviews: PropTypes.object,
+  firebase: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+Hosts.defaultProps = {
+  hosts: {},
+  interviews: {},
+};
 
 export default compose(
   firebaseConnect(['hosts', 'interviews']),

@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import firebase from 'firebase';
 import './index.css';
 import configureStore from './store';
 import App from './App';
@@ -19,7 +18,7 @@ const store = configureStore(firebaseConfig);
 
 render(
   <Provider store={store}>
-    <App firebase={firebase} />
+    <App />
   </Provider>,
   document.getElementById('root'),
 );
