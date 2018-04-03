@@ -4,21 +4,23 @@ import Interview from './Interview';
 import { sortInterviews } from '../sort';
 
 const InterviewsTable = ({ interviews }) => (
-  <table>
-    <tbody>
-      <tr>
-        <th>Date</th>
-        <th colSpan="2">Morning</th>
-        <th colSpan="2">Afternoon</th>
-        <th>Host</th>
-      </tr>
-      {
-        sortInterviews(interviews).map(interview => (
-          <Interview key={interview.id} {...interview} />
-        ))
-      }
-    </tbody>
-  </table>
+  <div className="InterviewsTable">
+    <table>
+      <tbody>
+        <tr>
+          <th>Date</th>
+          <th colSpan="2">Morning</th>
+          <th colSpan="2">Afternoon</th>
+          <th>Host</th>
+        </tr>
+        {
+          sortInterviews(interviews).map(interview => (
+            <Interview key={interview.id} {...interview} />
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
 );
 
 InterviewsTable.propTypes = {
