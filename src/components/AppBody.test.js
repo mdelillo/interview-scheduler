@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { mount } from 'enzyme';
 import firebase from 'firebase';
+import moment from 'moment';
 import AppBody from './AppBody';
 import configureStore from '../store';
 
@@ -15,6 +16,10 @@ function setText(inputName, value) {
   const input = wrapper.find(`input[name="${inputName}"]`);
   input.instance().value = value;
   input.simulate('change');
+}
+
+function setDate(value) {
+  wrapper.find('DatePicker').instance().props.onChange(moment(value));
 }
 
 function submit(name) {
@@ -119,7 +124,7 @@ describe('AppBody', () => {
 
   it('adds and deletes interviews, interviewers, and hosts', (done) => {
     setTimeout(() => {
-      setText('newInterviewDate', '2018-01-10');
+      setDate('2018-01-10');
       setText('newInterviewMorningPair', 'new-interview-morning-pair');
       setText('newInterviewMorningTeam', 'new-interview-morning-team');
       setText('newInterviewAfternoonPair', 'new-interview-afternoon-pair');

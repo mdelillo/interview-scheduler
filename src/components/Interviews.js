@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
@@ -10,15 +12,22 @@ class Interviews extends React.Component {
   constructor() {
     super();
     this.state = {
-      newInterviewDate: '',
+      newInterviewDate: null,
       newInterviewMorningPair: '',
       newInterviewMorningTeam: '',
       newInterviewAfternoonPair: '',
       newInterviewAfternoonTeam: '',
       newInterviewHost: '',
     };
+    this.handleDateChange = this.handleDateChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.addInterview = this.addInterview.bind(this);
+  }
+
+  handleDateChange(date) {
+    this.setState({
+      newInterviewDate: date,
+    });
   }
 
   handleInputChange(e) {
@@ -30,7 +39,7 @@ class Interviews extends React.Component {
   addInterview(e) {
     e.preventDefault();
     this.props.firebase.push('/interviews', {
-      date: this.state.newInterviewDate,
+      date: this.state.newInterviewDate.format('YYYY-MM-DD'),
       morningPair: this.state.newInterviewMorningPair,
       morningTeam: this.state.newInterviewMorningTeam,
       afternoonPair: this.state.newInterviewAfternoonPair,
@@ -38,7 +47,7 @@ class Interviews extends React.Component {
       host: this.state.newInterviewHost,
     }).then(() => {
       this.setState({
-        newInterviewDate: '',
+        newInterviewDate: null,
         newInterviewMorningPair: '',
         newInterviewMorningTeam: '',
         newInterviewAfternoonPair: '',
@@ -62,14 +71,13 @@ class Interviews extends React.Component {
         <InterviewsTable interviews={firebaseObjectToArray(interviews)} />
         <br />
         <form name="newInterview" onSubmit={this.addInterview}>
-          <input
-            type="text"
-            name="newInterviewDate"
-            value={this.state.newInterviewDate}
-            onChange={this.handleInputChange}
-            placeholder="Date"
+          <DatePicker
+            selected={this.state.newInterviewDate}
+            onChange={this.handleDateChange}
+            dateFormat="YYYY-MM-DD"
+            placeholderText="Date"
+            popperePlacement="right-start"
           />
-          <br />
           <input
             type="text"
             name="newInterviewMorningPair"
