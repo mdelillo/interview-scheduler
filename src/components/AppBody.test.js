@@ -124,6 +124,8 @@ describe('AppBody', () => {
 
   it('adds and deletes interviews, interviewers, and hosts', (done) => {
     setTimeout(() => {
+      wrapper.update();
+
       setDate('2018-01-10');
       setText('newInterviewMorningPair', 'new-interview-morning-pair');
       setText('newInterviewMorningTeam', 'new-interview-morning-team');

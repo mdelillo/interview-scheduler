@@ -5,80 +5,27 @@ import { connect } from 'react-redux';
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
 import { firebaseObjectToArray } from '../firebase';
 import InterviewersTable from './InterviewersTable';
+import NewInterviewer from './NewInterviewer';
 
-class Interviewers extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      newInterviewerName: '',
-      newInterviewerTeam: '',
-    };
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.addInterviewer = this.addInterviewer.bind(this);
+const Interviewers = ({ firebase, interviewers, interviews }) => {
+  if (!isLoaded(interviewers) || !isLoaded(interviews)) {
+    return <p>Loading interviewers</p>;
+  } else if (isEmpty(interviewers)) {
+    return <p>No interviewers</p>;
   }
 
-  handleInputChange(e) {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  }
-
-  addInterviewer(e) {
-    e.preventDefault();
-    this.props.firebase.push('/interviewers', {
-      name: this.state.newInterviewerName,
-      team: this.state.newInterviewerTeam,
-    }).then(() => {
-      this.setState({
-        newInterviewerName: '',
-        newInterviewerTeam: '',
-      });
-    });
-  }
-
-  render() {
-    const { interviewers, interviews } = this.props;
-
-    if (!isLoaded(interviewers) || !isLoaded(interviews)) {
-      return <p>Loading interviewers</p>;
-    } else if (isEmpty(interviewers)) {
-      return <p>No interviewers</p>;
-    }
-
-    return (
-      <div className="Interviewers">
-        <h2>Interviewers</h2>
-        <InterviewersTable
-          interviewers={firebaseObjectToArray(interviewers)}
-          interviews={firebaseObjectToArray(interviews)}
-        />
-        <br />
-        <form name="newInterviewer" onSubmit={this.addInterviewer}>
-          <input
-            type="text"
-            name="newInterviewerName"
-            value={this.state.newInterviewerName}
-            onChange={this.handleInputChange}
-            placeholder="Name"
-          />
-          <br />
-          <input
-            type="text"
-            name="newInterviewerTeam"
-            value={this.state.newInterviewerTeam}
-            onChange={this.handleInputChange}
-            placeholder="Team"
-          />
-          <br />
-          <input
-            type="submit"
-            value="Add Interviewer"
-          />
-        </form>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="Interviewers">
+      <h2>Interviewers</h2>
+      <InterviewersTable
+        interviewers={firebaseObjectToArray(interviewers)}
+        interviews={firebaseObjectToArray(interviews)}
+      />
+      <br />
+      <NewInterviewer firebase={firebase} />
+    </div>
+  );
+};
 
 Interviewers.propTypes = {
   interviewers: PropTypes.object,
