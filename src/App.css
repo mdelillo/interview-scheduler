@@ -1,11 +1,11 @@
 .AppBody {
   display: grid;
-  grid-template-columns: repeat(4, max-content);
-  grid-gap: 30px;
+  grid-template-columns: repeat(3, max-content) minmax(200px, auto);
+  grid-gap: 20px;
 }
 
 .AppBody > div {
-  padding: 0px 30px;
+  padding: 0px 20px;
 }
 
 .AppHeader {
@@ -122,4 +122,9 @@ input {
 
 input[type="text"] {
   width: 100px;
+}
+
+.Notes textarea {
+  width: 100%;
+  height: 70%;
 }

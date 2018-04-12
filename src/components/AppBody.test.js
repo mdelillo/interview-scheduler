@@ -12,10 +12,10 @@ let store;
 
 const asyncFlush = () => new Promise(resolve => setTimeout(resolve, 0));
 
-function setText(inputName, value) {
-  const input = wrapper.find(`input[name="${inputName}"]`);
-  input.instance().value = value;
-  input.simulate('change');
+function setText(name, value) {
+  const element = wrapper.find(`[name="${name}"]`);
+  element.instance().value = value;
+  element.simulate('change');
 }
 
 function setDate(value) {
@@ -58,6 +58,7 @@ describe('AppBody', () => {
     const interviewersRef = firebaseApp.database().ref('interviewers');
     const hostsRef = firebaseApp.database().ref('hosts');
     const interviewsRef = firebaseApp.database().ref('interviews');
+    const notesRef = firebaseApp.database().ref('notes');
     interviewersRef.push({ name: 'person1', team: 'team1' });
     interviewersRef.push({ name: 'person2', team: 'team2' });
     interviewersRef.push({ name: 'person3', team: 'team3' });
@@ -76,6 +77,7 @@ describe('AppBody', () => {
     interviewsRef.push({
       date: '2018-01-04', morningPair: 'person1', morningTeam: 'team1', afternoonPair: 'person3', afternoonTeam: 'team3', host: 'person2',
     });
+    notesRef.set('some-notes');
     mountApp();
     await asyncFlush();
   });
@@ -224,6 +226,23 @@ describe('AppBody', () => {
       expect(wrapper.find('Interviews').find('td.highlight')).toHaveLength(2);
       expect(wrapper.find('Interviewers').find('td.highlight')).toHaveLength(1);
       expect(wrapper.find('Hosts').find('td.highlight')).toHaveLength(0);
+      done();
+    }, 500);
+  });
+
+  it('saves arbitrary notes', (done) => {
+    setTimeout(() => {
+      wrapper.update();
+      expect(wrapper.text()).toContain('some-notes');
+
+      setText('notes', 'some-updated-notes');
+      expect(wrapper.text()).toContain('some-updated-notes');
+
+      unmountApp();
+      mountApp();
+
+      expect(wrapper.text()).toContain('some-updated-notes');
+
       done();
     }, 500);
   });

@@ -4,6 +4,7 @@ import '../App.css';
 import Interviews from './Interviews';
 import Interviewers from './Interviewers';
 import Hosts from './Hosts';
+import Notes from './Notes';
 
 const AppBody = ({ loggedIn, loginFunc }) => {
   if (!loggedIn) {
@@ -18,6 +19,7 @@ const AppBody = ({ loggedIn, loginFunc }) => {
       <Interviews />
       <Interviewers />
       <Hosts />
+      <Notes />
     </div>
   );
 };
