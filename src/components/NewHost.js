@@ -34,6 +34,7 @@ class NewHost extends React.Component {
           value={this.state.newHostName}
           onChange={this.handleInputChange}
           placeholder="Name"
+          required
         />
         <br />
         <input

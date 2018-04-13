@@ -40,6 +40,7 @@ class NewInterviewer extends React.Component {
           value={this.state.newInterviewerName}
           onChange={this.handleInputChange}
           placeholder="Name"
+          required
         />
         <br />
         <input
