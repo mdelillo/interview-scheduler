@@ -72,7 +72,7 @@ class NewInterview extends React.Component {
           onChange={this.handleDateChange}
           dateFormat="YYYY-MM-DD"
           placeholderText="Date"
-          popperePlacement="right-start"
+          required
         />
         <input
           type="text"
