@@ -17,6 +17,7 @@ class NewInterview extends React.Component {
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.addInterview = this.addInterview.bind(this);
+    this.datepicker = React.createRef();
   }
 
   handleDateChange(date) {
@@ -61,6 +62,8 @@ class NewInterview extends React.Component {
         newInterviewAfternoonTeam: '',
         newInterviewHost: '',
       });
+      this.datepicker.current.setFocus(true);
+      this.datepicker.current.setOpen(false);
     });
   }
 
@@ -72,6 +75,7 @@ class NewInterview extends React.Component {
           onChange={this.handleDateChange}
           dateFormat="YYYY-MM-DD"
           placeholderText="Date"
+          ref={this.datepicker}
           required
         />
         <input
