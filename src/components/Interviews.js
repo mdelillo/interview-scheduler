@@ -7,8 +7,8 @@ import { firebaseObjectToArray } from '../firebase';
 import InterviewsTable from './InterviewsTable';
 import NewInterview from './NewInterview';
 
-const Interviews = ({ firebase, interviews }) => {
-  if (!isLoaded(interviews)) {
+const Interviews = ({ firebase, interviews, interviewers }) => {
+  if (!isLoaded(interviews) || !isLoaded(interviewers)) {
     return <p>Loading interviews</p>;
   } else if (isEmpty(interviews)) {
     return <p>No interviews</p>;
@@ -18,13 +18,14 @@ const Interviews = ({ firebase, interviews }) => {
     <div className="Interviews">
       <InterviewsTable interviews={firebaseObjectToArray(interviews)} />
       <br />
-      <NewInterview firebase={firebase} />
+      <NewInterview interviewers={firebaseObjectToArray(interviewers)} firebase={firebase} />
     </div>
   );
 };
 
 Interviews.propTypes = {
   interviews: PropTypes.object,
+  interviewers: PropTypes.object,
   firebase: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
@@ -35,8 +36,9 @@ Interviews.defaultProps = {
 };
 
 export default compose(
-  firebaseConnect(['interviews']),
+  firebaseConnect(['interviews, interviewers']),
   connect(({ firebase }) => ({
     interviews: firebase.data.interviews,
+    interviewers: firebase.data.interviewers,
   })),
 )(Interviews);

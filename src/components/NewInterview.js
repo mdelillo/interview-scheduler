@@ -29,6 +29,18 @@ class NewInterview extends React.Component {
     this.setState({
       [e.target.name]: e.target.value,
     });
+    const interviewer = this.props.interviewers.find(i => i.name === e.target.value);
+    if (interviewer) {
+      if (e.target.name === 'newInterviewMorningPair') {
+        this.setState({
+          newInterviewMorningTeam: interviewer.team,
+        });
+      } else if (e.target.name === 'newInterviewAfternoonPair') {
+        this.setState({
+          newInterviewAfternoonTeam: interviewer.team,
+        });
+      }
+    }
   }
 
   addInterview(e) {
@@ -112,9 +124,18 @@ class NewInterview extends React.Component {
 }
 
 NewInterview.propTypes = {
+  interviewers: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    team: PropTypes.string.isRequired,
+  }).isRequired),
   firebase: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+};
+
+NewInterview.defaultProps = {
+  interviewers: [],
 };
 
 export default NewInterview;
