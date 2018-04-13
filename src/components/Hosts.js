@@ -6,10 +6,11 @@ import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
 import { firebaseObjectToArray } from '../firebase';
 import HostsTable from './HostsTable';
 import NewHost from './NewHost';
+import Spinner from './Spinner';
 
 const Hosts = ({ firebase, hosts, interviews }) => {
   if (!isLoaded(hosts) || !isLoaded(interviews)) {
-    return <p>Loading hosts</p>;
+    return <Spinner text="Loading hosts" />;
   } else if (isEmpty(hosts)) {
     return <p>No hosts</p>;
   }
@@ -28,16 +29,11 @@ const Hosts = ({ firebase, hosts, interviews }) => {
 };
 
 Hosts.propTypes = {
-  hosts: PropTypes.object,
-  interviews: PropTypes.object,
+  hosts: PropTypes.object.isRequired,
+  interviews: PropTypes.object.isRequired,
   firebase: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-};
-
-Hosts.defaultProps = {
-  hosts: {},
-  interviews: {},
 };
 
 export default compose(

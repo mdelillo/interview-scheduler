@@ -6,10 +6,11 @@ import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
 import { firebaseObjectToArray } from '../firebase';
 import InterviewersTable from './InterviewersTable';
 import NewInterviewer from './NewInterviewer';
+import Spinner from './Spinner';
 
 const Interviewers = ({ firebase, interviewers, interviews }) => {
   if (!isLoaded(interviewers) || !isLoaded(interviews)) {
-    return <p>Loading interviewers</p>;
+    return <Spinner text="Loading interviewers" />;
   } else if (isEmpty(interviewers)) {
     return <p>No interviewers</p>;
   }
@@ -28,16 +29,11 @@ const Interviewers = ({ firebase, interviewers, interviews }) => {
 };
 
 Interviewers.propTypes = {
-  interviewers: PropTypes.object,
-  interviews: PropTypes.object,
+  interviewers: PropTypes.object.isRequired,
+  interviews: PropTypes.object.isRequired,
   firebase: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-};
-
-Interviewers.defaultProps = {
-  interviewers: {},
-  interviews: {},
 };
 
 export default compose(
