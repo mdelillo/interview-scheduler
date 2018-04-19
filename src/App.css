@@ -144,7 +144,7 @@ input[type="text"] {
   display: inline-block;
   width: 100px;
   height: 100px;
-  background: url('http://i.imgur.com/oSHLAzp.png') center center;
+  background: url('./images/spinner.png') center center;
   background-size: contain;
   transition-origin: 50% 50%;
   animation: spinner 8s infinite linear;
@@ -156,7 +156,7 @@ input[type="text"] {
   margin-left: -100px;
   width: 100px;
   height: 100px;
-  background: url('http://i.imgur.com/u0BC2ZR.png') center center;
+  background: url('./images/spinner-center.png') center center;
   background-size: contain;
   content: '';
 }
