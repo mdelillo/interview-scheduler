@@ -21,7 +21,7 @@ describe('InterviewersTable', () => {
       { date: '2018-01-02', morningPair: 'bravo', afternoonPair: 'golf' },
     ];
     const expectedInterviewerOrder = ['echo', 'foxtrot', 'hotel', 'alpha', 'bravo', 'golf', 'charlie', 'delta'];
-    const wrapper = shallow(<InterviewersTable interviewers={interviewers} interviews={interviews} />);
+    const wrapper = shallow(<InterviewersTable interviewers={interviewers} interviews={interviews} readonly />);
     expect(wrapper.find(Interviewer).map(h => h.props().name)).toEqual(expectedInterviewerOrder);
   });
 });

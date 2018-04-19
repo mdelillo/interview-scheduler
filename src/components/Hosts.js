@@ -8,7 +8,9 @@ import HostsTable from './HostsTable';
 import NewHost from './NewHost';
 import Spinner from './Spinner';
 
-const Hosts = ({ firebase, hosts, interviews }) => {
+const Hosts = ({
+  firebase, hosts, interviews, readonly,
+}) => {
   if (!isLoaded(hosts) || !isLoaded(interviews)) {
     return <Spinner text="Loading hosts" />;
   } else if (isEmpty(hosts)) {
@@ -21,9 +23,12 @@ const Hosts = ({ firebase, hosts, interviews }) => {
       <HostsTable
         hosts={firebaseObjectToArray(hosts)}
         interviews={firebaseObjectToArray(interviews)}
+        readonly={readonly}
       />
       <br />
-      <NewHost firebase={firebase} />
+      {readonly ||
+        <NewHost firebase={firebase} />
+      }
     </div>
   );
 };
@@ -34,6 +39,7 @@ Hosts.propTypes = {
   firebase: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  readonly: PropTypes.bool.isRequired,
 };
 
 export default compose(

@@ -19,7 +19,7 @@ function closeDropdowns(e) {
 class App extends React.Component {
   constructor() {
     super();
-    this.state = { user: null };
+    this.state = { user: null, readonly: true };
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
   }
@@ -28,6 +28,11 @@ class App extends React.Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ user });
+        firebase.database().ref('admins').once('value').then((snapshot) => {
+          const isAdmin = this.state.user &&
+            snapshot.child(this.state.user.email.replace('.', '%2E')).exists();
+          this.setState({ readonly: !isAdmin });
+        });
       }
     });
     document.addEventListener('click', closeDropdowns);
@@ -39,7 +44,9 @@ class App extends React.Component {
 
   logout() {
     firebase.auth().signOut()
-      .then(() => { this.setState({ user: null }); });
+      .then(() => {
+        this.setState({ user: null, readonly: true });
+      });
   }
 
   login() {
@@ -51,7 +58,7 @@ class App extends React.Component {
     return (
       <div className="app">
         <AppHeader user={this.state.user} logoutFunc={this.logout} />
-        <AppBody loggedIn={!!this.state.user} loginFunc={this.login} />
+        <AppBody loggedIn={!!this.state.user} loginFunc={this.login} readonly={this.state.readonly} />
       </div>
     );
   }

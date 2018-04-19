@@ -6,7 +6,7 @@ import HighlightableCell from './HighlightableCell';
 import weekNumber from '../weekNumber';
 
 const Interview = ({
-  firebase, id, date, morningPair, morningTeam, afternoonPair, afternoonTeam, host,
+  firebase, id, date, morningPair, morningTeam, afternoonPair, afternoonTeam, host, readonly,
 }) => {
   const removeInterview = () => { firebase.remove(`interviews/${id}`); };
   const backgroundColors = ['#ccccff', '#ffcccc', '#ffffcc', '#ccffcc'];
@@ -19,7 +19,9 @@ const Interview = ({
       <HighlightableCell value={afternoonPair} />
       <HighlightableCell value={afternoonTeam} />
       <HighlightableCell value={host} />
-      <td><span className="clickable"><MdDelete onClick={removeInterview} /></span></td>
+      { readonly ||
+        <td><span className="clickable"><MdDelete onClick={removeInterview} /></span></td>
+      }
     </tr>
   );
 };
@@ -35,6 +37,7 @@ Interview.propTypes = {
   afternoonPair: PropTypes.string.isRequired,
   afternoonTeam: PropTypes.string.isRequired,
   host: PropTypes.string.isRequired,
+  readonly: PropTypes.bool.isRequired,
 };
 
 export default firebaseConnect()(Interview);

@@ -6,7 +6,7 @@ import Interviewers from './Interviewers';
 import Hosts from './Hosts';
 import Notes from './Notes';
 
-const AppBody = ({ loggedIn, loginFunc }) => {
+const AppBody = ({ loggedIn, loginFunc, readonly }) => {
   if (!loggedIn) {
     return (
       <div className="AppBody">
@@ -16,10 +16,10 @@ const AppBody = ({ loggedIn, loginFunc }) => {
   }
   return (
     <div className="AppBody">
-      <Interviews />
-      <Interviewers />
-      <Hosts />
-      <Notes />
+      <Interviews readonly={readonly} />
+      <Interviewers readonly={readonly} />
+      <Hosts readonly={readonly} />
+      <Notes readonly={readonly} />
     </div>
   );
 };
@@ -27,6 +27,7 @@ const AppBody = ({ loggedIn, loginFunc }) => {
 AppBody.propTypes = {
   loggedIn: PropTypes.bool.isRequired,
   loginFunc: PropTypes.func.isRequired,
+  readonly: PropTypes.bool.isRequired,
 };
 
 export default AppBody;

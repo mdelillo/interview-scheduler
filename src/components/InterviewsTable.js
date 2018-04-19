@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Interview from './Interview';
 import { sortInterviews } from '../sort';
 
-const InterviewsTable = ({ interviews }) => (
+const InterviewsTable = ({ interviews, readonly }) => (
   <div className="InterviewsTable">
     <table>
       <tbody>
@@ -15,7 +15,7 @@ const InterviewsTable = ({ interviews }) => (
         </tr>
         {
           sortInterviews(interviews).map(interview => (
-            <Interview key={interview.id} {...interview} />
+            <Interview key={interview.id} readonly={readonly} {...interview} />
           ))
         }
       </tbody>
@@ -33,6 +33,7 @@ InterviewsTable.propTypes = {
     afternoonTeam: PropTypes.string.isRequired,
     host: PropTypes.string.isRequired,
   }).isRequired).isRequired,
+  readonly: PropTypes.bool.isRequired,
 };
 
 export default InterviewsTable;

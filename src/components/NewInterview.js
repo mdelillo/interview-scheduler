@@ -62,8 +62,10 @@ class NewInterview extends React.Component {
         newInterviewAfternoonTeam: '',
         newInterviewHost: '',
       });
-      this.datepicker.current.setFocus(true);
-      this.datepicker.current.setOpen(false);
+      if (this.datepicker.current) {
+        this.datepicker.current.setFocus(true);
+        this.datepicker.current.setOpen(false);
+      }
     });
   }
 

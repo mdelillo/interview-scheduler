@@ -20,7 +20,7 @@ describe('HostsTable', () => {
       { date: '2018-01-04', host: 'alpha' },
     ];
     const expectedHostOrder = ['bravo', 'echo', 'foxtrot', 'charlie', 'delta', 'alpha'];
-    const wrapper = shallow(<HostsTable hosts={hosts} interviews={interviews} />);
+    const wrapper = shallow(<HostsTable hosts={hosts} interviews={interviews} readonly />);
     expect(wrapper.find(Host).map(h => h.props().name)).toEqual(expectedHostOrder);
   });
 });

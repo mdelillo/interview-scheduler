@@ -26,8 +26,8 @@ function submit(name) {
   wrapper.find(`[name="${name}"]`).simulate('submit');
 }
 
-function mountApp() {
-  wrapper = mount(<Provider store={store}><AppBody loggedIn loginFunc={() => {}} /></Provider>);
+function mountApp(readonly = false) {
+  wrapper = mount(<Provider store={store}><AppBody loggedIn loginFunc={() => {}} readonly={readonly} /></Provider>);
 }
 
 function unmountApp() {
@@ -124,87 +124,6 @@ describe('AppBody', () => {
     }, 500);
   });
 
-  it('adds and deletes interviews, interviewers, and hosts', (done) => {
-    setTimeout(() => {
-      wrapper.update();
-
-      setDate('2018-01-10');
-      setText('newInterviewMorningPair', 'new-interview-morning-pair');
-      setText('newInterviewMorningTeam', 'new-interview-morning-team');
-      setText('newInterviewAfternoonPair', 'new-interview-afternoon-pair');
-      setText('newInterviewAfternoonTeam', 'new-interview-afternoon-team');
-      setText('newInterviewHost', 'new-interview-host');
-      submit('newInterview');
-      expect(wrapper.text()).toContain('2018-01-10');
-      expect(wrapper.text()).toContain('new-interview-morning-pair');
-      expect(wrapper.text()).toContain('new-interview-morning-team');
-      expect(wrapper.text()).toContain('new-interview-afternoon-pair');
-      expect(wrapper.text()).toContain('new-interview-afternoon-team');
-      expect(wrapper.text()).toContain('new-interview-host');
-
-      setText('newInterviewerName', 'new-interviewer-name');
-      setText('newInterviewerTeam', 'new-interviewer-team');
-      submit('newInterviewer');
-      expect(wrapper.text()).toContain('new-interviewer-name');
-      expect(wrapper.text()).toContain('new-interviewer-team');
-
-      setText('newHostName', 'new-host-name');
-      submit('newHost');
-      expect(wrapper.text()).toContain('new-host-name');
-
-      unmountApp();
-      mountApp();
-
-      expect(wrapper.text()).toContain('2018-01-10');
-      expect(wrapper.text()).toContain('new-interview-morning-pair');
-      expect(wrapper.text()).toContain('new-interview-morning-team');
-      expect(wrapper.text()).toContain('new-interview-afternoon-pair');
-      expect(wrapper.text()).toContain('new-interview-afternoon-team');
-      expect(wrapper.text()).toContain('new-interview-host');
-      expect(wrapper.text()).toContain('new-interviewer-name');
-      expect(wrapper.text()).toContain('new-interviewer-team');
-      expect(wrapper.text()).toContain('new-host-name');
-
-      wrapper.find('Interview').find('MdDelete').first().simulate('click');
-      wrapper.find('Interviewer').find('MdDelete').first().simulate('click');
-      wrapper.find('Host').find('MdDelete').first().simulate('click');
-
-      setTimeout(() => {
-        wrapper.update();
-        const interviews = wrapper.find('Interviews');
-        expect(interviews.find('tr')).toHaveLength(5);
-        expect(interviews.text()).not.toContain('2018-01-10');
-        expect(interviews.text()).toContain('2018-01-04');
-        expect(interviews.text()).toContain('2018-01-03');
-        expect(interviews.text()).toContain('2018-01-02');
-        expect(interviews.text()).toContain('2018-01-01');
-
-        const interviewers = wrapper.find('Interviewers');
-        expect(interviewers.find('tr')).toHaveLength(3);
-        expect(interviewers.text()).not.toContain('new-interviewer-name');
-        expect(interviewers.text()).toContain('person1');
-        expect(interviewers.text()).toContain('person2');
-        expect(interviewers.text()).toContain('person3');
-
-        const hosts = wrapper.find('Hosts');
-        expect(hosts.find('tr')).toHaveLength(3);
-        expect(interviewers.text()).not.toContain('new-host-name');
-        expect(hosts.text()).toContain('person2');
-        expect(hosts.text()).toContain('person3');
-        expect(hosts.text()).toContain('person4');
-
-        unmountApp();
-        mountApp();
-
-        expect(wrapper.text()).not.toContain('2018-01-10');
-        expect(wrapper.text()).not.toContain('new-interviewer-name');
-        expect(wrapper.text()).not.toContain('new-host-name');
-
-        done();
-      }, 100);
-    }, 500);
-  });
-
   it('highlights all instances of a name or team when hovered over', (done) => {
     setTimeout(() => {
       wrapper.update();
@@ -230,20 +149,128 @@ describe('AppBody', () => {
     }, 500);
   });
 
-  it('saves arbitrary notes', (done) => {
-    setTimeout(() => {
-      wrapper.update();
-      expect(wrapper.text()).toContain('some-notes');
+  describe('when the user is an admin', () => {
+    it('adds and deletes interviews, interviewers, and hosts', (done) => {
+      setTimeout(() => {
+        wrapper.update();
 
-      setText('notes', 'some-updated-notes');
-      expect(wrapper.text()).toContain('some-updated-notes');
+        setDate('2018-01-10');
+        setText('newInterviewMorningPair', 'new-interview-morning-pair');
+        setText('newInterviewMorningTeam', 'new-interview-morning-team');
+        setText('newInterviewAfternoonPair', 'new-interview-afternoon-pair');
+        setText('newInterviewAfternoonTeam', 'new-interview-afternoon-team');
+        setText('newInterviewHost', 'new-interview-host');
+        submit('newInterview');
+        expect(wrapper.text()).toContain('2018-01-10');
+        expect(wrapper.text()).toContain('new-interview-morning-pair');
+        expect(wrapper.text()).toContain('new-interview-morning-team');
+        expect(wrapper.text()).toContain('new-interview-afternoon-pair');
+        expect(wrapper.text()).toContain('new-interview-afternoon-team');
+        expect(wrapper.text()).toContain('new-interview-host');
 
+        setText('newInterviewerName', 'new-interviewer-name');
+        setText('newInterviewerTeam', 'new-interviewer-team');
+        submit('newInterviewer');
+        expect(wrapper.text()).toContain('new-interviewer-name');
+        expect(wrapper.text()).toContain('new-interviewer-team');
+
+        setText('newHostName', 'new-host-name');
+        submit('newHost');
+        expect(wrapper.text()).toContain('new-host-name');
+
+        unmountApp();
+        mountApp();
+
+        expect(wrapper.text()).toContain('2018-01-10');
+        expect(wrapper.text()).toContain('new-interview-morning-pair');
+        expect(wrapper.text()).toContain('new-interview-morning-team');
+        expect(wrapper.text()).toContain('new-interview-afternoon-pair');
+        expect(wrapper.text()).toContain('new-interview-afternoon-team');
+        expect(wrapper.text()).toContain('new-interview-host');
+        expect(wrapper.text()).toContain('new-interviewer-name');
+        expect(wrapper.text()).toContain('new-interviewer-team');
+        expect(wrapper.text()).toContain('new-host-name');
+
+        wrapper.find('Interview').find('MdDelete').first().simulate('click');
+        wrapper.find('Interviewer').find('MdDelete').first().simulate('click');
+        wrapper.find('Host').find('MdDelete').first().simulate('click');
+
+        setTimeout(() => {
+          wrapper.update();
+          const interviews = wrapper.find('Interviews');
+          expect(interviews.find('tr')).toHaveLength(5);
+          expect(interviews.text()).not.toContain('2018-01-10');
+          expect(interviews.text()).toContain('2018-01-04');
+          expect(interviews.text()).toContain('2018-01-03');
+          expect(interviews.text()).toContain('2018-01-02');
+          expect(interviews.text()).toContain('2018-01-01');
+
+          const interviewers = wrapper.find('Interviewers');
+          expect(interviewers.find('tr')).toHaveLength(3);
+          expect(interviewers.text()).not.toContain('new-interviewer-name');
+          expect(interviewers.text()).toContain('person1');
+          expect(interviewers.text()).toContain('person2');
+          expect(interviewers.text()).toContain('person3');
+
+          const hosts = wrapper.find('Hosts');
+          expect(hosts.find('tr')).toHaveLength(3);
+          expect(interviewers.text()).not.toContain('new-host-name');
+          expect(hosts.text()).toContain('person2');
+          expect(hosts.text()).toContain('person3');
+          expect(hosts.text()).toContain('person4');
+
+          unmountApp();
+          mountApp();
+
+          expect(wrapper.text()).not.toContain('2018-01-10');
+          expect(wrapper.text()).not.toContain('new-interviewer-name');
+          expect(wrapper.text()).not.toContain('new-host-name');
+
+          done();
+        }, 100);
+      }, 500);
+    });
+
+    it('saves arbitrary notes', (done) => {
+      setTimeout(() => {
+        wrapper.update();
+        expect(wrapper.text()).toContain('some-notes');
+
+        setText('notes', 'some-updated-notes');
+        expect(wrapper.text()).toContain('some-updated-notes');
+
+        unmountApp();
+        mountApp();
+
+        expect(wrapper.text()).toContain('some-updated-notes');
+
+        done();
+      }, 500);
+    });
+  });
+
+  describe('when the user is not an admin', () => {
+    beforeEach(() => {
       unmountApp();
-      mountApp();
+      mountApp(true);
+    });
 
-      expect(wrapper.text()).toContain('some-updated-notes');
+    it('does not allow interviews, interviewers, or hosts to be added or deleted', (done) => {
+      setTimeout(() => {
+        expect(wrapper.find('form')).toHaveLength(0);
+        expect(wrapper.find('MdDelete')).toHaveLength(0);
 
-      done();
-    }, 500);
+        done();
+      }, 500);
+    });
+
+    it('shows notes as readonly', (done) => {
+      setTimeout(() => {
+        expect(wrapper.text()).toContain('some-notes');
+        expect(wrapper.find('textarea').props().readOnly).toBe(true);
+
+        done();
+      }, 500);
+    });
   });
 });

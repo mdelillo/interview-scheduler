@@ -8,7 +8,9 @@ import InterviewersTable from './InterviewersTable';
 import NewInterviewer from './NewInterviewer';
 import Spinner from './Spinner';
 
-const Interviewers = ({ firebase, interviewers, interviews }) => {
+const Interviewers = ({
+  firebase, interviewers, interviews, readonly,
+}) => {
   if (!isLoaded(interviewers) || !isLoaded(interviews)) {
     return <Spinner text="Loading interviewers" />;
   } else if (isEmpty(interviewers)) {
@@ -21,9 +23,12 @@ const Interviewers = ({ firebase, interviewers, interviews }) => {
       <InterviewersTable
         interviewers={firebaseObjectToArray(interviewers)}
         interviews={firebaseObjectToArray(interviews)}
+        readonly={readonly}
       />
       <br />
-      <NewInterviewer firebase={firebase} />
+      { readonly ||
+        <NewInterviewer firebase={firebase} />
+      }
     </div>
   );
 };
@@ -34,6 +39,7 @@ Interviewers.propTypes = {
   firebase: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  readonly: PropTypes.bool.isRequired,
 };
 
 export default compose(

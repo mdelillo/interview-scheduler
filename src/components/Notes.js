@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { firebaseConnect, isLoaded } from 'react-redux-firebase';
 import Spinner from './Spinner';
 
-const Notes = ({ firebase, notes }) => {
+const Notes = ({ firebase, notes, readonly }) => {
   if (!isLoaded(notes)) {
     return <Spinner text="Loading notes" />;
   }
@@ -15,6 +15,7 @@ const Notes = ({ firebase, notes }) => {
       <h2>Notes</h2>
       <textarea
         name="notes"
+        readOnly={readonly}
         value={notes || ''}
         onChange={(e) => { firebase.set('notes', e.target.value); }}
       />
@@ -27,6 +28,7 @@ Notes.propTypes = {
   firebase: PropTypes.shape({
     set: PropTypes.func.isRequired,
   }).isRequired,
+  readonly: PropTypes.bool.isRequired,
 };
 
 export default compose(

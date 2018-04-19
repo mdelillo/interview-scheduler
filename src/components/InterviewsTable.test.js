@@ -26,7 +26,7 @@ describe('InterviewsTable', () => {
       },
     ];
     const expectedInterviewOrder = ['1', '4', '3', '6', '5', '2'];
-    const wrapper = shallow(<InterviewsTable interviews={interviews} />);
+    const wrapper = shallow(<InterviewsTable interviews={interviews} readonly />);
     expect(wrapper.find(Interview).map(h => h.props().id)).toEqual(expectedInterviewOrder);
   });
 });

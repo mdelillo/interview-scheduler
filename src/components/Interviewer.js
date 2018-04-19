@@ -5,14 +5,16 @@ import MdDelete from 'react-icons/lib/md/delete';
 import HighlightableCell from './HighlightableCell';
 
 const Interviewer = ({
-  firebase, id, name, team,
+  firebase, id, name, team, readonly,
 }) => {
   const removeInterviewer = () => { firebase.remove(`interviewers/${id}`); };
   return (
     <tr>
       <HighlightableCell value={name} />
       <HighlightableCell value={team} />
-      <td><span className="clickable"><MdDelete onClick={removeInterviewer} /></span></td>
+      { readonly ||
+        <td><span className="clickable"><MdDelete onClick={removeInterviewer} /></span></td>
+      }
     </tr>
   );
 };
@@ -24,6 +26,7 @@ Interviewer.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   team: PropTypes.string.isRequired,
+  readonly: PropTypes.bool.isRequired,
 };
 
 export default firebaseConnect()(Interviewer);

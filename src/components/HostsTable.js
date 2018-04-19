@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import Host from './Host';
 import { sortHosts } from '../sort';
 
-const HostsTable = ({ hosts, interviews }) => (
+const HostsTable = ({ hosts, interviews, readonly }) => (
   <table>
     <tbody>
       {
         sortHosts(hosts, interviews).map(host => (
-          <Host key={host.id} {...host} />
+          <Host key={host.id} readonly={readonly} {...host} />
         ))
       }
     </tbody>
@@ -24,6 +24,7 @@ HostsTable.propTypes = {
     date: PropTypes.string.isRequired,
     host: PropTypes.string.isRequired,
   }).isRequired).isRequired,
+  readonly: PropTypes.bool.isRequired,
 };
 
 export default HostsTable;
