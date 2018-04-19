@@ -37,7 +37,7 @@ export function sortHosts(hosts, interviews) {
     if (recency1 !== recency2) {
       return recency2 - recency1;
     }
-    return host1.name > host2.name;
+    return host1.name.localeCompare(host2.name);
   });
 }
 
@@ -49,6 +49,6 @@ export function sortInterviewers(interviewers, interviews) {
     if (recency1 !== recency2) {
       return recency2 - recency1;
     }
-    return interviewer1.name > interviewer2.name;
+    return interviewer1.name.localeCompare(interviewer2.name);
   });
 }
