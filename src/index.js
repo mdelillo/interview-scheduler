@@ -15,10 +15,11 @@ const firebaseConfig = {
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
 };
 const store = configureStore(firebaseConfig);
+const everyoneCanWrite = !!process.env.REACT_APP_FIREBASE_EVERYONE_CAN_WRITE;
 
 render(
   <Provider store={store}>
-    <App />
+    <App everyoneCanWrite={everyoneCanWrite} />
   </Provider>,
   document.getElementById('root'),
 );

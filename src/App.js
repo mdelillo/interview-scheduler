@@ -1,8 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import firebase from 'firebase';
 import './App.css';
-import AppHeader from './components/AppHeader';
-import AppBody from './components/AppBody';
+import AuthenticatedApp from './components/AuthenticatedApp';
 
 function closeDropdowns(e) {
   if (!e.target.matches('.dropdown-button')) {
@@ -19,7 +19,7 @@ function closeDropdowns(e) {
 class App extends React.Component {
   constructor() {
     super();
-    this.state = { user: null, readonly: true };
+    this.state = { user: null, admins: [] };
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
   }
@@ -28,10 +28,8 @@ class App extends React.Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ user });
-        firebase.database().ref('admins').once('value').then((snapshot) => {
-          const isAdmin = this.state.user &&
-            snapshot.child(this.state.user.email.replace('.', '%2E')).exists();
-          this.setState({ readonly: !isAdmin });
+        firebase.database().ref('admins').on('value', (snapshot) => {
+          this.setState({ admins: Object.keys(snapshot.val()).map(a => a.replace('%2E', '.')) });
         });
       }
     });
@@ -45,7 +43,7 @@ class App extends React.Component {
   logout() {
     firebase.auth().signOut()
       .then(() => {
-        this.setState({ user: null, readonly: true });
+        this.setState({ user: null, admins: [] });
       });
   }
 
@@ -56,12 +54,23 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="app">
-        <AppHeader user={this.state.user} logoutFunc={this.logout} />
-        <AppBody loggedIn={!!this.state.user} loginFunc={this.login} readonly={this.state.readonly} />
-      </div>
+      <AuthenticatedApp
+        admins={this.state.admins}
+        user={this.state.user}
+        everyoneCanWrite={this.props.everyoneCanWrite}
+        loginFunc={this.login}
+        logoutFunc={this.logout}
+      />
     );
   }
 }
+
+App.propTypes = {
+  everyoneCanWrite: PropTypes.bool,
+};
+
+App.defaultProps = {
+  everyoneCanWrite: false,
+};
 
 export default App;
