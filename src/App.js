@@ -29,7 +29,9 @@ class App extends React.Component {
       if (user) {
         this.setState({ user });
         firebase.database().ref('admins').on('value', (snapshot) => {
-          this.setState({ admins: Object.keys(snapshot.val()).map(a => a.replace('%2E', '.')) });
+          if (snapshot.val()) {
+            this.setState({ admins: Object.keys(snapshot.val()).map(a => a.replace('%2E', '.')) });
+          }
         });
       }
     });
