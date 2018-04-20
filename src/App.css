@@ -1,6 +1,6 @@
 .AppBody {
   display: grid;
-  grid-template-columns: repeat(3, max-content) minmax(200px, auto);
+  grid-template-columns: repeat(3, max-content) minmax(200px, 400px);
   grid-gap: 20px;
 }
 
@@ -81,12 +81,8 @@ h2 {
   margin: 10px 0px;
 }
 
-.Interviews {
-  margin: 10px 0px;
-}
-
 .InterviewsTable {
-  height: 70vh;
+  max-height: 65vh;
   overflow: scroll;
   padding-right: 10px;
 }

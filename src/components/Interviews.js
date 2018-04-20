@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
+import { firebaseConnect, isLoaded } from 'react-redux-firebase';
 import { firebaseObjectToArray } from '../firebase';
 import InterviewsTable from './InterviewsTable';
 import NewInterview from './NewInterview';
@@ -13,12 +13,11 @@ const Interviews = ({
 }) => {
   if (!isLoaded(interviews) || !isLoaded(interviewers)) {
     return <Spinner text="Loading interviews" />;
-  } else if (isEmpty(interviews)) {
-    return <p>No interviews</p>;
   }
 
   return (
     <div className="Interviews">
+      <h2>Interviews</h2>
       <InterviewsTable interviews={firebaseObjectToArray(interviews)} readonly={readonly} />
       <br />
       { readonly ||
