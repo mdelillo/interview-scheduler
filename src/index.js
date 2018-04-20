@@ -16,10 +16,12 @@ const firebaseConfig = {
 };
 const store = configureStore(firebaseConfig);
 const everyoneCanWrite = !!process.env.REACT_APP_FIREBASE_EVERYONE_CAN_WRITE;
+const title = process.env.REACT_APP_TITLE || 'Interview Scheduler';
+document.title = title;
 
 render(
   <Provider store={store}>
-    <App everyoneCanWrite={everyoneCanWrite} />
+    <App everyoneCanWrite={everyoneCanWrite} title={title} />
   </Provider>,
   document.getElementById('root'),
 );

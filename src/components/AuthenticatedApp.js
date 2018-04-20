@@ -4,7 +4,7 @@ import AppHeader from './AppHeader';
 import AppBody from './AppBody';
 
 const AuthenticatedApp = ({
-  admins, user, everyoneCanWrite, loginFunc, logoutFunc,
+  admins, user, everyoneCanWrite, loginFunc, logoutFunc, title,
 }) => {
   const isAdmin = user && admins.some(a => a.replace('%2E', '.') === user.email);
   return (
@@ -12,6 +12,7 @@ const AuthenticatedApp = ({
       <AppHeader
         user={user}
         logoutFunc={logoutFunc}
+        title={title}
       />
       <AppBody
         loggedIn={!!user}
@@ -32,6 +33,7 @@ AuthenticatedApp.propTypes = {
   everyoneCanWrite: PropTypes.bool,
   loginFunc: PropTypes.func.isRequired,
   logoutFunc: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 AuthenticatedApp.defaultProps = {

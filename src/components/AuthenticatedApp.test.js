@@ -10,6 +10,7 @@ function render(admins, email, everyoneCanWrite) {
     everyoneCanWrite={everyoneCanWrite}
     loginFunc={() => {}}
     logoutFunc={() => {}}
+    title=""
   />);
 }
 

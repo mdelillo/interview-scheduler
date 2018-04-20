@@ -62,6 +62,7 @@ class App extends React.Component {
         everyoneCanWrite={this.props.everyoneCanWrite}
         loginFunc={this.login}
         logoutFunc={this.logout}
+        title={this.props.title}
       />
     );
   }
@@ -69,6 +70,7 @@ class App extends React.Component {
 
 App.propTypes = {
   everyoneCanWrite: PropTypes.bool,
+  title: PropTypes.string.isRequired,
 };
 
 App.defaultProps = {

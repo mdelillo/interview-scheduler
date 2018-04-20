@@ -1,5 +1,5 @@
 {
-  "name": "nyc-interviews",
+  "name": "interview-scheduler",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
