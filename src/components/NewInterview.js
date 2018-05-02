@@ -48,11 +48,11 @@ class NewInterview extends React.Component {
     e.preventDefault();
     this.props.firebase.push('/interviews', {
       date: this.state.newInterviewDate.format('YYYY-MM-DD'),
-      morningPair: this.state.newInterviewMorningPair,
-      morningTeam: this.state.newInterviewMorningTeam,
-      afternoonPair: this.state.newInterviewAfternoonPair,
-      afternoonTeam: this.state.newInterviewAfternoonTeam,
-      host: this.state.newInterviewHost,
+      morningPair: this.state.newInterviewMorningPair.trim(),
+      morningTeam: this.state.newInterviewMorningTeam.trim(),
+      afternoonPair: this.state.newInterviewAfternoonPair.trim(),
+      afternoonTeam: this.state.newInterviewAfternoonTeam.trim(),
+      host: this.state.newInterviewHost.trim(),
     }).then(() => {
       this.setState({
         newInterviewDate: null,

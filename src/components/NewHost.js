@@ -19,7 +19,7 @@ class NewHost extends React.Component {
 
   addHost(e) {
     e.preventDefault();
-    this.props.firebase.push('/hosts', { name: this.state.newHostName })
+    this.props.firebase.push('/hosts', { name: this.state.newHostName.trim() })
       .then(() => {
         this.setState({ newHostName: '' });
       });

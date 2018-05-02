@@ -21,8 +21,8 @@ class NewInterviewer extends React.Component {
   addInterviewer(e) {
     e.preventDefault();
     this.props.firebase.push('/interviewers', {
-      name: this.state.newInterviewerName,
-      team: this.state.newInterviewerTeam,
+      name: this.state.newInterviewerName.trim(),
+      team: this.state.newInterviewerTeam.trim(),
     }).then(() => {
       this.setState({
         newInterviewerName: '',
