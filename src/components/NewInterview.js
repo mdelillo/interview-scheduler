@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
+import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 
 class NewInterview extends React.Component {
@@ -47,7 +48,7 @@ class NewInterview extends React.Component {
   addInterview(e) {
     e.preventDefault();
     this.props.firebase.push('/interviews', {
-      date: this.state.newInterviewDate.format('YYYY-MM-DD'),
+      date: moment(this.state.newInterviewDate).format('YYYY-MM-DD'),
       morningPair: this.state.newInterviewMorningPair.trim(),
       morningTeam: this.state.newInterviewMorningTeam.trim(),
       afternoonPair: this.state.newInterviewAfternoonPair.trim(),
@@ -75,11 +76,12 @@ class NewInterview extends React.Component {
         <DatePicker
           selected={this.state.newInterviewDate}
           onChange={this.handleDateChange}
-          dateFormat="YYYY-MM-DD"
+          dateFormat="yyyy-MM-dd"
           placeholderText="Date"
           ref={this.datepicker}
           required
         />
+        <br />
         <input
           type="text"
           name="newInterviewMorningPair"

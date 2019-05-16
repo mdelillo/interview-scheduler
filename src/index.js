@@ -1,6 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
+import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
+import firebase from 'firebase';
 import './index.css';
 import configureStore from './store';
 import App from './App';
@@ -14,14 +16,25 @@ const firebaseConfig = {
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
 };
+firebase.initializeApp(firebaseConfig);
+
 const store = configureStore(firebaseConfig);
+const rrfConfig = { userProfile: 'users' };
+const rrfProps = {
+  firebase,
+  config: rrfConfig,
+  dispatch: store.dispatch,
+};
+
 const everyoneCanWrite = !!process.env.REACT_APP_FIREBASE_EVERYONE_CAN_WRITE;
 const title = process.env.REACT_APP_TITLE || 'Interview Scheduler';
 document.title = title;
 
 render(
   <Provider store={store}>
-    <App everyoneCanWrite={everyoneCanWrite} title={title} />
+    <ReactReduxFirebaseProvider {...rrfProps}>
+      <App everyoneCanWrite={everyoneCanWrite} title={title} />
+    </ReactReduxFirebaseProvider>
   </Provider>,
   document.getElementById('root'),
 );

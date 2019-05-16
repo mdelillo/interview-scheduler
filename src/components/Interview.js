@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { firebaseConnect } from 'react-redux-firebase';
-import MdDelete from 'react-icons/lib/md/delete';
+import { MdDelete } from 'react-icons/md';
 import HighlightableCell from './HighlightableCell';
 import weekNumber from '../weekNumber';
 
